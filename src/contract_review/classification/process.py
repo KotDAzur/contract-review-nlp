@@ -4,11 +4,24 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.pipeline import make_pipeline
 from sklearn.svm import LinearSVC
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 from transformers import DataCollatorWithPadding, get_linear_schedule_with_warmup
 
 NO_DECAY = ("bias", "LayerNorm.weight")
+
+
+class Examples(Dataset):
+    """Clauses déjà tokenisées : un dict (input_ids, attention_mask, labels) par clause."""
+
+    def __init__(self, examples: list[dict]):
+        self.examples = examples
+
+    def __len__(self) -> int:
+        return len(self.examples)
+
+    def __getitem__(self, index: int) -> dict:
+        return self.examples[index]
 
 
 def make_baseline():
@@ -44,7 +57,7 @@ def make_loader(tokenizer, texts, labels, max_len, batch_size, shuffle=False, se
         for example, label in zip(examples, labels):
             example["labels"] = label
     return DataLoader(
-        examples,
+        Examples(examples),
         batch_size=batch_size,
         shuffle=shuffle,
         generator=torch.Generator().manual_seed(seed),
