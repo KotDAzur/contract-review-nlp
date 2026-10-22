@@ -1,10 +1,10 @@
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import pytest
 from matplotlib.figure import Figure
 
+from contract_review.data.process import group_ids
 from contract_review.evaluation import process
 
 TEST_DATA = Path(__file__).parent / "test_data"
@@ -18,12 +18,6 @@ def read_csv(name: str) -> pd.DataFrame:
 @pytest.fixture
 def predictions():
     return read_csv("predictions.csv")
-
-
-def test_softmax():
-    probs = process.softmax(read_csv("logits.csv").to_numpy())
-
-    np.testing.assert_allclose(probs, read_csv("expected_softmax.csv").to_numpy(), atol=1e-6)
 
 
 def test_metrics(predictions):
@@ -50,14 +44,8 @@ def test_with_ci():
     assert result == {"accuracy": {"value": 0.7, "ci": [0.025, 0.975]}}
 
 
-def test_group_ids():
-    ids = process.group_ids(NAMES, [["a", "c"]])
-
-    assert ids.tolist() == [0, 1, 0]
-
-
 def test_tolerant_accuracy(predictions):
-    ids = process.group_ids(NAMES, [["a", "c"]])
+    ids = group_ids(NAMES, [["a", "c"]])
 
     result = process.tolerant_accuracy(
         predictions["label"].to_numpy(), predictions["pred"].to_numpy(), ids

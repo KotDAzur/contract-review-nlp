@@ -3,9 +3,12 @@ import logging
 import shutil
 from pathlib import Path
 
+import joblib
+import pandas as pd
 import pytest
 
 from contract_review.classification import task
+from contract_review.classification.process import make_baseline
 from contract_review.utils import Context
 
 TEST_DATA = Path(__file__).parent / "test_data"
@@ -29,6 +32,18 @@ def test_predict_probs(ctx, tiny_bert):
 
     assert probs.shape == (2, 3)
     assert probs.sum(axis=1).tolist() == pytest.approx([1.0, 1.0])
+
+
+def test_predict_all(ctx, tiny_bert):
+    models = ctx.run_dir / "models"
+    shutil.copytree(tiny_bert, models / "classifier")
+    train = pd.read_csv(TEST_DATA / "ledgar" / "train.csv")
+    joblib.dump(make_baseline().fit(train["text"], train["label"]), models / "baseline.joblib")
+
+    predictions = task.predict_all(ctx, ["the agreement", "notice days"])
+
+    assert list(predictions.columns) == ["pred_baseline", "pred", "confidence"]
+    assert len(predictions) == 2
 
 
 def test_run(ctx, monkeypatch, load_fixture_ledgar):
