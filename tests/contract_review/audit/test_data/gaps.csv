@@ -1,0 +1,4 @@
+model,slice,value,n,accuracy,expected,gap,ci_low,ci_high,p_adj,status
+transformer,pronoun,feminine,120,0.7,0.8,-0.1,-0.15,-0.05,0.001,écart
+transformer,length,short,400,0.82,0.81,0.01,-0.02,0.04,0.8,ok
+baseline,length,short,400,0.8,0.81,-0.01,-0.04,0.02,0.7,ok

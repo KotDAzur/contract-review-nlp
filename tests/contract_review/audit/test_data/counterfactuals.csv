@@ -1,0 +1,3 @@
+perturbation,model,n,flip_rate,flip_excess,flip_excess_low,flip_excess_high
+jurisdiction: France,transformer,500,0.05,0.03,0.01,0.05
+gender: masculine -> feminine,transformer,300,0.02,,,
