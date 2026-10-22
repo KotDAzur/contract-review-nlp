@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from rank_bm25 import BM25Okapi
 
-from contract_review.data.process import NON_US, US_STATES
+from contract_review.data.process import NON_US, US_STATES, normalize
 
 NUMBER_WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven"}
 NUMBER_WORDS |= {10: "ten", 12: "twelve", 15: "fifteen", 30: "thirty", 60: "sixty", 90: "ninety"}
@@ -75,7 +75,7 @@ def rank(search_fn, queries, k: int, copies_of: dict) -> list[list[int]]:
     """Top-k de chaque requête, sans les copies exactes de la requête dans la banque."""
     ranked = []
     for i, text in enumerate(queries):
-        copies = set(copies_of.get(text, ()))
+        copies = set(copies_of.get(normalize(text), ()))
         found = [j for j in search_fn(i, k + len(copies)) if j not in copies]
         ranked.append(found[:k])
     return ranked
@@ -95,7 +95,7 @@ def n_relevant(queries, query_labels, bank_labels, copies_of, group) -> np.ndarr
     return np.array(
         [
             in_group[group[label]]
-            - sum(group[bank_labels[j]] == group[label] for j in copies_of.get(text, ()))
+            - sum(group[bank_labels[j]] == group[label] for j in copies_of.get(normalize(text), ()))
             for text, label in zip(queries, query_labels)
         ]
     )

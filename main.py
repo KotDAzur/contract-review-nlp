@@ -1,6 +1,7 @@
 import argparse
 import time
 
+from contract_review.audit import task as audit
 from contract_review.classification import task as classification
 from contract_review.data import task as data
 from contract_review.evaluation import task as evaluation
@@ -13,6 +14,7 @@ STEPS = {
     "classification": classification.run,
     "evaluation": evaluation.run,
     "retrieval": retrieval.run,
+    "audit": audit.run,
 }
 
 

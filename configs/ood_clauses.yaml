@@ -1,0 +1,40 @@
+# 12 clauses courantes en français et leur équivalent anglais, pour mesurer ce que devient le
+# classifieur hors de sa distribution (LEDGAR est anglais, droit américain). Écrites à la main :
+# 12 exemples ne donnent aucune accuracy fiable, c'est un contrôle qualitatif. La mesure chiffrée
+# est faite sur des clauses de test traduites automatiquement (voir la section audit).
+- label: Governing Laws
+  fr: Le présent contrat est régi par le droit français et interprété conformément à celui-ci.
+  en: This Agreement shall be governed by and construed in accordance with the laws of France.
+- label: Confidentiality
+  fr: Chaque partie s'engage à conserver confidentielles les informations confidentielles de l'autre partie et à ne pas les divulguer à des tiers sans son accord écrit préalable.
+  en: Each party shall keep confidential all confidential information of the other party and shall not disclose it to any third party without the prior written consent of the other party.
+- label: Terminations
+  fr: Chaque partie peut résilier le présent contrat à tout moment moyennant un préavis écrit de trente (30) jours adressé à l'autre partie.
+  en: Either party may terminate this Agreement at any time upon thirty (30) days' prior written notice to the other party.
+- label: Notices
+  fr: Toute notification prévue par le présent contrat doit être faite par écrit et envoyée par lettre recommandée avec accusé de réception à l'adresse indiquée en tête des présentes.
+  en: Any notice required or permitted under this Agreement shall be in writing and sent by certified mail, return receipt requested, to the address set forth above.
+- label: Severability
+  fr: Si une stipulation du présent contrat est déclarée nulle ou inapplicable, les autres stipulations demeurent en vigueur.
+  en: If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.
+- label: Entire Agreements
+  fr: Le présent contrat constitue l'intégralité de l'accord entre les parties sur son objet et remplace tous les accords antérieurs, écrits ou oraux.
+  en: This Agreement constitutes the entire agreement between the parties with respect to its subject matter and supersedes all prior agreements, whether written or oral.
+- label: Assignments
+  fr: Aucune partie ne peut céder ou transférer ses droits ou obligations au titre du présent contrat sans l'accord écrit préalable de l'autre partie.
+  en: Neither party may assign or transfer any of its rights or obligations under this Agreement without the prior written consent of the other party.
+- label: Counterparts
+  fr: Le présent contrat peut être signé en plusieurs exemplaires, chacun étant considéré comme un original et tous constituant un seul et même document.
+  en: This Agreement may be executed in several counterparts, each of which shall be deemed an original and all of which together shall constitute one and the same instrument.
+- label: Amendments
+  fr: Toute modification du présent contrat doit faire l'objet d'un avenant écrit signé par les deux parties.
+  en: No amendment of this Agreement shall be effective unless made in writing and signed by both parties.
+- label: Waivers
+  fr: Le fait pour une partie de ne pas exercer un droit prévu au présent contrat ne constitue pas une renonciation à ce droit.
+  en: The failure of a party to exercise any right under this Agreement shall not constitute a waiver of that right.
+- label: Indemnifications
+  fr: Le prestataire s'engage à indemniser et à garantir le client contre toute réclamation, perte ou dommage résultant d'un manquement au présent contrat.
+  en: The Contractor shall indemnify and hold harmless the Client from and against any claim, loss or damage arising out of a breach of this Agreement.
+- label: Jurisdictions
+  fr: Tout litige relatif au présent contrat relève de la compétence exclusive des tribunaux de Paris.
+  en: Any dispute arising out of this Agreement shall be subject to the exclusive jurisdiction of the courts of Paris.
