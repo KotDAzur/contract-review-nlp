@@ -30,6 +30,20 @@ Deux choix reviennent dans toutes les étapes :
   ont un équivalent dans le train une fois la casse et la ponctuation retirées. Le retrieval
   exclut ces copies des résultats ; l'audit mesure l'accuracy avec et sans elles.
 
+## Résultats
+
+Chiffres du run final sur le jeu de test (10 000 clauses), avec intervalle de confiance à 95 %.
+Le macro-F1 est la métrique principale : les classes sont très déséquilibrées.
+
+| | Baseline TF-IDF | Legal-BERT affiné |
+|---|---|---|
+| Accuracy | *à compléter* | *à compléter* |
+| Macro-F1 | *à compléter* | *à compléter* |
+| Part étiquetée automatiquement, à 97 % de précision visée | | *à compléter* |
+
+Source : `metrics/evaluation.json` du run. Le détail (par type de clause, calibration, retrieval,
+audit) est dans `MODEL_CARD.md` et `AUDIT.md`.
+
 ## Installation
 
 Prérequis : Python 3.11 et [uv](https://docs.astral.sh/uv/). Un GPU NVIDIA est fortement
@@ -59,6 +73,10 @@ uv run main.py run --exp legalbert --steps evaluation audit   # seulement certai
 `--exp` désigne un fichier de `configs/experiments/`. Les étapes demandées s'exécutent
 toujours dans l'ordre `data → classification → evaluation → retrieval → audit`. Relancer une
 étape seule suppose que les précédentes ont déjà produit leurs fichiers dans le même run.
+Le dossier du run porte la **date du jour** (`<date>_<exp>`) : relancer une étape le
+lendemain crée un nouveau dossier, vide. Pour reprendre un run, le faire le même jour.
+
+La durée de chaque étape est enregistrée dans `run_info.json`.
 
 ### Classer une clause
 
@@ -97,6 +115,14 @@ data/  models/  metrics/  figures/  retrieval/
 
 Pour lire les résultats, commencer par `metrics/evaluation.json`, `metrics/retrieval.json`
 puis `AUDIT.md`.
+
+## Documentation
+
+| Document | Contenu |
+|---|---|
+| [`MODEL_CARD.md`](MODEL_CARD.md) | Les modèles, l'entraînement, l'évaluation, et **ce pour quoi l'outil ne doit pas servir** |
+| [`DATA_CARD.md`](DATA_CARD.md) | LEDGAR : provenance, composition, qui est représenté ou non, problèmes de labels |
+| `AUDIT.md` | Rapport de biais et de robustesse du run, généré dans son dossier (pas versionné) |
 
 ## Configuration
 
@@ -139,13 +165,28 @@ uv run ruff check src main.py tests
 uv run ruff format --check src main.py tests
 ```
 
-Les 81 tests sont hermétiques : ils construisent de mini-modèles à poids aléatoires et de
+Les tests sont hermétiques : ils construisent de mini-modèles à poids aléatoires et de
 mini-jeux de données en local, sans réseau. GitHub Actions lance le style et les tests à
 chaque pull request et à chaque push sur `master`.
 
+Ils couvrent la logique pure de chaque étape (un test par fonction) et l'exécution réelle de
+`data`, `classification` et `evaluation` sur un mini-jeu de données. Les étapes `retrieval`
+et `audit` et les commandes `predict` et `search` ne sont pas encore testées de bout en bout.
+
+## Dépannage
+
+- **Le téléchargement depuis Hugging Face échoue** (erreur mentionnant Xet) : définir
+  `HF_HUB_DISABLE_XET=1` avant la commande. Sous PowerShell : `$env:HF_HUB_DISABLE_XET=1`.
+- **macOS : `No module named 'contract_review'` après `uv sync`** : le fichier qui rend le
+  package importable est marqué « caché » et Python l'ignore. Corriger avec
+  `chflags -R nohidden .venv`.
+- **Sous Windows, vérifier que le GPU est utilisé** :
+  `uv run python -c "import torch; print(torch.cuda.is_available())"` doit afficher `True`.
+  Sinon, l'entraînement tourne sur CPU et prend des heures.
+
 ## Limites
 
-Elles sont détaillées à la fin de chaque `AUDIT.md`. Les principales :
+Elles sont détaillées dans `MODEL_CARD.md` et à la fin de chaque `AUDIT.md`. Les principales :
 
 - LEDGAR est anglais et vient de contrats américains (dépôts SEC). Rien ne garantit que le
   modèle fonctionne sur des contrats européens ; les clauses traduites mesurent l'effet de la
@@ -155,6 +196,8 @@ Elles sont détaillées à la fin de chaque `AUDIT.md`. Les principales :
 - Les 25 questions de juristes et les 12 clauses françaises sont écrites et jugées par une
   seule personne : contrôle qualitatif, pas statistique.
 - Un seul entraînement (seed 42) : la variabilité entre entraînements n'est pas mesurée.
+- Legal-BERT a été pré-entraîné, entre autres, sur des contrats d'EDGAR, la source de LEDGAR :
+  un recouvrement de texte avec le jeu de test est possible, mais non mesurable ici.
 
 ## Auteurs
 
