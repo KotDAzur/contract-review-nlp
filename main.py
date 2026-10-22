@@ -1,11 +1,12 @@
 import argparse
 import time
 
+from contract_review.classification import task as classification
 from contract_review.data import task as data
 from contract_review.utils import make_context, write_run_info
 
 # Ordre du pipeline. Chaque étape est une fonction run(ctx).
-STEPS = {"data": data.run}
+STEPS = {"data": data.run, "classification": classification.run}
 
 
 def run(args: argparse.Namespace) -> None:
