@@ -1,0 +1,2 @@
+classification:
+  model: nlpaueb/legal-bert-base-uncased
