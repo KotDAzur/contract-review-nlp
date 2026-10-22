@@ -1,3 +1,4 @@
+import json
 import logging
 from pathlib import Path
 
@@ -71,4 +72,11 @@ def test_run(trained_ctx):
     )
     assert len(pd.read_csv(metrics / "per_class.csv")) == 3
     assert (metrics / "predictions_test.parquet").exists()
+    # Le seuil écrit dans le JSON doit redonner exactement la couverture rapportée
+    selective = json.loads((metrics / "evaluation.json").read_text())["transformer"]["selective"]
+    confidence = pd.read_parquet(metrics / "predictions_test.parquet")["confidence"]
+    assert (
+        round(float((confidence >= selective["threshold"]).mean()), 4)
+        == selective["test"]["coverage"]
+    )
     assert (trained_ctx.run_dir / "figures" / "reliability.png").exists()

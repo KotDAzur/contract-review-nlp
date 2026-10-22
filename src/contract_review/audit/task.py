@@ -72,12 +72,11 @@ def translate(model_name: str, texts: list[str], batch_size: int = 16) -> list[s
     return translated
 
 
-def slice_analysis(a: Audit, val_pred, slices, cfg) -> tuple[pd.DataFrame, pd.DataFrame]:
+def slice_analysis(a: Audit, slices, cfg) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Écarts d'accuracy par tranche (corrigés du mélange de types) et charge de revue humaine."""
-    val_labels = val_pred["label"].to_numpy()
     gaps = []
     for model, column in MODELS.items():
-        label_acc = process.label_accuracy(val_labels, val_pred[column].to_numpy(), len(a.names))
+        label_acc = process.label_accuracy(a.labels, a.test_pred[column].to_numpy(), len(a.names))
         correct = (a.test_pred[column].to_numpy() == a.labels).astype(float)
         table = process.slice_gaps(
             correct,
@@ -221,9 +220,7 @@ def run(ctx) -> None:
     train_texts = {normalize(text) for text in ledgar["train"]["text"]}
     duplicate = np.array([normalize(text) in train_texts for text in texts])
     slices["duplicate_in_train"] = np.where(duplicate, "yes", "no")
-    gaps, automation = slice_analysis(
-        a, pd.read_parquet(metrics_dir / "predictions_validation.parquet"), slices, cfg
-    )
+    gaps, automation = slice_analysis(a, slices, cfg)
 
     # Perturbations : les témoins viennent avant les perturbations qu'ils servent à comparer
     jurisdiction, _ = process.perturb(texts, lambda t: process.replace_jurisdiction(t, "Texas"))

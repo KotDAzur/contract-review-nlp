@@ -37,9 +37,12 @@ Le macro-F1 est la métrique principale : les classes sont très déséquilibré
 
 | | Baseline TF-IDF | Legal-BERT affiné |
 |---|---|---|
-| Accuracy | *à compléter* | *à compléter* |
-| Macro-F1 | *à compléter* | *à compléter* |
-| Part étiquetée automatiquement, à 97 % de précision visée | | *à compléter* |
+| Accuracy | 0,881 | 0,878 |
+| Macro-F1 | 0,828 | 0,802 |
+| Part étiquetée automatiquement, à 97 % de précision visée | | 68,4 % (précision 96,7 %) |
+
+Sur ce run (5 époques), Legal-BERT ne bat pas le baseline : accuracy équivalente, macro-F1
+plus faible de 2,6 points (intervalle de confiance qui exclut zéro). Voir `MODEL_CARD.md`.
 
 Source : `metrics/evaluation.json` du run. Le détail (par type de clause, calibration, retrieval,
 audit) est dans `MODEL_CARD.md` et `AUDIT.md`.

@@ -67,22 +67,30 @@ def reliability(confidence, correct, n_bins: int) -> tuple[pd.DataFrame, float]:
 
 
 def coverage_precision(confidence, correct) -> pd.DataFrame:
-    """Si on ne garde que les clauses les plus sûres : part conservée et précision."""
+    """Si on ne garde que les clauses les plus sûres : part conservée et précision.
+
+    Une ligne par valeur de confiance, la dernière du bloc : `confidence >= seuil` garde tout le
+    bloc d'ex æquo, donc la précision à lire est celle qui le compte en entier."""
     order = np.argsort(-confidence)
     kept = np.arange(1, len(confidence) + 1)
-    return pd.DataFrame(
+    curve = pd.DataFrame(
         {
             "threshold": confidence[order],
             "coverage": kept / len(confidence),
             "precision": np.cumsum(correct[order]) / kept,
         }
     )
+    return curve.drop_duplicates("threshold", keep="last")
 
 
 def choose_threshold(curve: pd.DataFrame, target: float) -> float:
-    """Seuil le plus bas qui atteint la précision visée (1.0 si aucun : tout en revue)."""
+    """Seuil le plus bas qui atteint la précision visée.
+
+    Si aucun seuil ne l'atteint : 2.0, au-dessus de toute confiance (maximum 1.0), donc plus
+    aucune clause n'est étiquetée automatiquement. Un seuil de 1.0 garderait les clauses
+    saturées à exactement 1.0."""
     reached = curve[curve["precision"] >= target]
-    return float(reached["threshold"].iloc[-1]) if len(reached) else 1.0
+    return float(reached["threshold"].iloc[-1]) if len(reached) else 2.0
 
 
 def at_threshold(confidence, correct, threshold: float) -> dict:

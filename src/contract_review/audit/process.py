@@ -4,7 +4,7 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
-from contract_review.data.process import US_STATES
+from contract_review.data.process import PRONOUNS, US_STATES, matches
 
 MASC_TO_FEM = {"he": "she", "him": "her", "himself": "herself", "his": "her"}
 FEM_TO_MASC = {"she": "he", "herself": "himself", "hers": "his"}
@@ -26,7 +26,12 @@ def match_case(word: str, model: str) -> str:
 
 
 def swap_gender(text: str, to: str) -> str:
-    """he/him/his vers she/her (to="feminine"), ou l'inverse (to="masculine")."""
+    """he/him/his vers she/her (to="feminine"), ou l'inverse (to="masculine").
+
+    Une clause qui mélange déjà les deux genres ("his or her") reste inchangée : la perturbation
+    donnerait "his or his", un texte absurde qui ne mesurerait plus la sensibilité au genre."""
+    if len(matches(text, PRONOUNS, re.IGNORECASE)) == 2:
+        return text
     to_feminine = to == "feminine"
     words = MASC_TO_FEM if to_feminine else FEM_TO_MASC
     pattern = r"\b(he|him|himself|his)\b" if to_feminine else r"\b(she|her|hers|herself)\b"
@@ -96,8 +101,10 @@ def label_accuracy(labels, preds, n_labels: int) -> np.ndarray:
 def slice_gaps(correct, expected, slices, n_boot, seed, min_size, alpha) -> pd.DataFrame:
     """Écart entre l'accuracy d'une tranche et celle attendue vu son mélange de types de clause.
 
-    `expected` : pour chaque clause, l'accuracy de son type mesurée sur la validation. Sans cette
-    correction, une tranche riche en types difficiles passerait pour un biais."""
+    `expected` : pour chaque clause, l'accuracy de son type mesurée sur le test lui-même. Sans cette
+    correction, une tranche riche en types difficiles passerait pour un biais. Tirée de la
+    validation, elle ajouterait un bruit que l'intervalle ignore et un décalage (le checkpoint a
+    été choisi sur la validation) : des écarts significatifs seraient signalés à tort."""
     rng = np.random.default_rng(seed)
     rows = []
     for column in slices:
@@ -314,8 +321,9 @@ def render_report(
         section("Constats", "\n".join(summary_lines(gaps, counterfactuals, ood, leakage, cfg))),
         section(
             "1. Accuracy par tranche (transformer)",
-            "`expected` est l'accuracy attendue vu les types de clause de la tranche (mesurée sur la "
-            "validation) ; `gap` = accuracy - expected, avec son intervalle de confiance bootstrap.",
+            "`expected` est l'accuracy attendue vu les types de clause de la tranche (accuracy de "
+            "chaque type sur l'ensemble du test) ; `gap` = accuracy - expected, avec son intervalle "
+            "de confiance bootstrap.",
             pick(transformer, slice_columns),
             "Écarts significatifs du baseline TF-IDF : "
             + (
