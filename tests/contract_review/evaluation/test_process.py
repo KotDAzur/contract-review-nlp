@@ -91,9 +91,23 @@ def test_coverage_precision(predictions):
         curve, read_csv("expected_curve.csv"), atol=1e-5, check_dtype=False
     )
 
+    # Ex æquo de confiance : une seule ligne par valeur, qui compte tout le bloc
+    ties = read_csv("ties.csv")
+    curve = process.coverage_precision(
+        ties["confidence"].to_numpy(), ties["correct"].to_numpy(bool)
+    )
+    pd.testing.assert_frame_equal(
+        curve.reset_index(drop=True),
+        read_csv("expected_ties_curve.csv"),
+        atol=1e-5,
+        check_dtype=False,
+    )
+
 
 def test_choose_threshold():
     assert process.choose_threshold(read_csv("expected_curve.csv"), target=0.9) == 0.8
+    # Cible inatteignable : seuil au-dessus de toute confiance, rien n'est étiqueté automatiquement
+    assert process.choose_threshold(read_csv("expected_ties_curve.csv"), target=0.97) == 2.0
 
 
 def test_at_threshold(predictions):

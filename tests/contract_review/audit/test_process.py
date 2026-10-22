@@ -40,6 +40,8 @@ def test_swap_gender():
     assert process.swap_gender(text, "feminine") == (
         "The Employee shall give her notice and the Company shall pay her."
     )
+    mixed = "The Employee shall give his or her notice."
+    assert process.swap_gender(mixed, "feminine") == mixed  # déjà mixte : pas de "her or her"
 
 
 def test_replace_jurisdiction():

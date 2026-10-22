@@ -38,7 +38,10 @@ evaluation:
   ece_bins: 15
 
 audit:
-  n_bootstrap: 1000
+  # La plus petite p-value possible est 2 / (n_bootstrap + 1) ; Holm exige p < alpha / m pour la
+  # meilleure tranche. Avec 23 tranches et 1000 rééchantillons la marge n'est que de 8 %, et
+  # elle disparaît à 26 tranches : plus aucun écart ne serait signalé.
+  n_bootstrap: 5000
   alpha: 0.05  # seuil après correction de Holm
   min_slice_size: 50  # en dessous, la tranche n'est pas testée
   samples_per_slice: 30  # clauses à relire pour juger les regex de tranches

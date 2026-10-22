@@ -77,7 +77,7 @@ def run(ctx) -> None:
     results["transformer"]["ece"] = round(ece, 4)
     results["transformer"]["selective"] = {
         "target_precision": cfg["target_precision"],
-        "threshold": round(threshold, 4),
+        "threshold": threshold,  # non arrondi : `predict` et l'audit relisent cette valeur
         "validation": process.at_threshold(conf_val, correct_val, threshold),
         "test": on_test,
     }
