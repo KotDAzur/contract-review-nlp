@@ -57,6 +57,15 @@ def compute_slices(texts, labels, train_counts) -> pd.DataFrame:
     return pd.DataFrame(slices_of(t, train_counts[y]) for t, y in zip(texts, labels))
 
 
+def group_ids(names: list[str], groups: list[list[str]]) -> np.ndarray:
+    """Identifiant de groupe par label : les quasi-synonymes partagent le même."""
+    ids = np.arange(len(names))
+    for group in groups:
+        members = [names.index(name) for name in group]
+        ids[members] = min(members)
+    return ids
+
+
 def label_summary(names: list[str], counts: np.ndarray) -> dict:
     """Déséquilibre des classes : extrêmes et ratio."""
     top, bottom = counts.argmax(), counts.argmin()

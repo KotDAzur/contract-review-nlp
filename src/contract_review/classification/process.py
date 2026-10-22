@@ -33,12 +33,16 @@ def class_weights(counts: np.ndarray, mode: str | None) -> torch.Tensor | None:
 
 
 def make_loader(tokenizer, texts, labels, max_len, batch_size, shuffle=False, seed=0) -> DataLoader:
-    """Tokenise sans padding ; le collator complète chaque batch à sa plus longue clause."""
+    """Tokenise sans padding ; le collator complète chaque batch à sa plus longue clause.
+    `labels=None` pour prédire sur des clauses sans étiquette."""
     encoded = tokenizer(list(texts), truncation=True, max_length=max_len)
     examples = [
-        {"input_ids": ids, "attention_mask": mask, "labels": label}
-        for ids, mask, label in zip(encoded["input_ids"], encoded["attention_mask"], labels)
+        {"input_ids": ids, "attention_mask": mask}
+        for ids, mask in zip(encoded["input_ids"], encoded["attention_mask"])
     ]
+    if labels is not None:
+        for example, label in zip(examples, labels):
+            example["labels"] = label
     return DataLoader(
         examples,
         batch_size=batch_size,
@@ -46,6 +50,11 @@ def make_loader(tokenizer, texts, labels, max_len, batch_size, shuffle=False, se
         generator=torch.Generator().manual_seed(seed),
         collate_fn=DataCollatorWithPadding(tokenizer),
     )
+
+
+def softmax(logits: np.ndarray) -> np.ndarray:
+    exp = np.exp(logits - logits.max(axis=1, keepdims=True))
+    return exp / exp.sum(axis=1, keepdims=True)
 
 
 def make_optimizer(model, lr: float, weight_decay: float) -> torch.optim.AdamW:

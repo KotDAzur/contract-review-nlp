@@ -17,3 +17,33 @@ classification:
   patience: 2  # early stopping sur le macro-F1 de validation
   fp16: true  # actif seulement si CUDA est disponible
   class_weights: null  # null ou sqrt_inv
+
+retrieval:
+  n_queries: 1000  # clauses de test servant de requêtes
+  k: 10
+  top_labels: 2  # types retenus par le routage question -> type
+  hybrid_model: bge
+  max_seq_length: 256
+  queries_file: configs/lawyer_queries.yaml
+  dense_models:
+    minilm:
+      name: sentence-transformers/all-MiniLM-L6-v2
+      query_prefix: ""
+    bge:
+      name: BAAI/bge-small-en-v1.5
+      query_prefix: "Represent this sentence for searching relevant passages: "  # questions seulement
+
+# Labels quasi synonymes dans LEDGAR (les titres de section varient d'un contrat à l'autre).
+# Sert à l'accuracy tolérante, au retrieval tolérant et à l'audit.
+synonym_groups:
+  - [Indemnifications, Indemnity]
+  - [Waivers, No Waivers]
+  - [Governing Laws, Applicable Laws]
+  - [Amendments, Modifications]
+  - [Entire Agreements, Integration]
+  - [Jurisdictions, Submission To Jurisdiction, Consent To Jurisdiction, Venues]
+  - [Successors, Assigns, Binding Effects, Assignments]
+  - [Tax Withholdings, Withholdings]
+  - [Definitions, Defined Terms]
+  - [Costs, Expenses, Fees]
+  - [Representations, Warranties]

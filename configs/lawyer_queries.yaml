@@ -1,0 +1,70 @@
+# 25 questions de juristes écrites à la main pour évaluer la recherche question -> clause.
+# label : type de clause attendu (nom LEDGAR). constraint : regex optionnelle que les bons
+# résultats doivent contenir (durée, juridiction...). Le jugement de pertinence reste celui
+# d'un seul annotateur : à lire comme un contrôle qualitatif, pas comme une statistique.
+- question: termination clauses with a 30-day notice period
+  label: Terminations
+  constraint: '(?i)\b(30|thirty)\b.{0,12}\bdays?\b'
+- question: governing law clauses under the laws of the State of Delaware
+  label: Governing Laws
+  constraint: '\bDelaware\b'
+- question: governing law clauses under New York law
+  label: Governing Laws
+  constraint: '\bNew York\b'
+- question: confidentiality obligations that survive for two years
+  label: Confidentiality
+  constraint: '(?i)\b(2|two)\b.{0,12}\byears?\b'
+- question: disputes resolved by arbitration under American Arbitration Association rules
+  label: Arbitration
+  constraint: '(?i)American Arbitration Association'
+- question: notices must be sent by certified mail
+  label: Notices
+  constraint: '(?i)certified mail'
+- question: severability clause
+  label: Severability
+- question: entire agreement clause superseding all prior agreements
+  label: Entire Agreements
+- question: assignment requires the prior written consent of the other party
+  label: Assignments
+- question: counterparts may be delivered by facsimile or electronic signature
+  label: Counterparts
+  constraint: '(?i)facsimile|electronic'
+- question: amendment only by written instrument signed by both parties
+  label: Amendments
+- question: waiver of the right to a jury trial
+  label: Waiver Of Jury Trials
+- question: indemnification of directors and officers
+  label: Indemnifications
+  constraint: '(?i)\bdirectors?\b'
+- question: parties submit to the exclusive jurisdiction of the courts of New York
+  label: Submission To Jurisdiction
+  constraint: '\bNew York\b'
+- question: borrower pays all costs and expenses of the lender
+  label: Expenses
+  constraint: '(?i)\bborrower\b'
+- question: payments free of withholding taxes with additional amounts paid
+  label: Tax Withholdings
+  constraint: '(?i)additional amounts|gross'
+- question: company shall maintain insurance coverage
+  label: Insurances
+- question: compliance with the Foreign Corrupt Practices Act
+  label: Anti-Corruption Laws
+  constraint: 'Foreign Corrupt Practices Act'
+- question: further assurances, parties will execute additional documents
+  label: Further Assurances
+- question: section headings are for convenience only
+  label: Headings
+- question: representations and warranties survive the closing
+  label: Survival
+  constraint: '(?i)\bclosing\b'
+- question: executive base salary of a fixed annual amount
+  label: Base Salary
+  constraint: '(?i)per annum|per year|annual'
+- question: paid vacation of four weeks per year
+  label: Vacations
+  constraint: '(?i)\b(4|four)\b.{0,12}\bweeks?\b'
+- question: non-disparagement covenant by the employee
+  label: Non-Disparagement
+- question: acceleration of vesting upon a change in control
+  label: Change In Control
+  constraint: '(?i)accelerat'
