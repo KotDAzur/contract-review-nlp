@@ -1,0 +1,123 @@
+{
+  "baseline": {
+    "validation": {
+      "accuracy": 0.8835,
+      "micro_f1": 0.8835,
+      "macro_f1": 0.8185,
+      "weighted_f1": 0.8788
+    },
+    "test": {
+      "accuracy": {
+        "value": 0.8809,
+        "ci": [
+          0.8742,
+          0.8875
+        ]
+      },
+      "micro_f1": {
+        "value": 0.8809,
+        "ci": [
+          0.8742,
+          0.8875
+        ]
+      },
+      "macro_f1": {
+        "value": 0.8284,
+        "ci": [
+          0.8133,
+          0.8381
+        ]
+      },
+      "weighted_f1": {
+        "value": 0.8756,
+        "ci": [
+          0.8683,
+          0.8825
+        ]
+      }
+    },
+    "test_tolerant_accuracy": 0.9091
+  },
+  "transformer": {
+    "validation": {
+      "accuracy": 0.8795,
+      "micro_f1": 0.8795,
+      "macro_f1": 0.8145,
+      "weighted_f1": 0.875
+    },
+    "test": {
+      "accuracy": {
+        "value": 0.8777,
+        "ci": [
+          0.8713,
+          0.884
+        ]
+      },
+      "micro_f1": {
+        "value": 0.8777,
+        "ci": [
+          0.8713,
+          0.884
+        ]
+      },
+      "macro_f1": {
+        "value": 0.8021,
+        "ci": [
+          0.7894,
+          0.8153
+        ]
+      },
+      "weighted_f1": {
+        "value": 0.8732,
+        "ci": [
+          0.8663,
+          0.8798
+        ]
+      }
+    },
+    "test_tolerant_accuracy": 0.9132,
+    "ece": 0.0467,
+    "selective": {
+      "target_precision": 0.97,
+      "threshold": 0.9583117961883545,
+      "validation": {
+        "coverage": 0.6931,
+        "precision": 0.9701
+      },
+      "test": {
+        "coverage": 0.6835,
+        "precision": 0.9669
+      }
+    }
+  },
+  "transformer_minus_baseline": {
+    "accuracy": {
+      "value": -0.0032,
+      "ci": [
+        -0.0086,
+        0.0015
+      ]
+    },
+    "micro_f1": {
+      "value": -0.0032,
+      "ci": [
+        -0.0086,
+        0.0015
+      ]
+    },
+    "macro_f1": {
+      "value": -0.0263,
+      "ci": [
+        -0.0379,
+        -0.0089
+      ]
+    },
+    "weighted_f1": {
+      "value": -0.0024,
+      "ci": [
+        -0.0082,
+        0.0028
+      ]
+    }
+  }
+}

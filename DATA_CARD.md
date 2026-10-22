@@ -41,8 +41,15 @@ La révision figée garantit que tous les runs utilisent exactement les mêmes d
 | validation | 10 000 |
 | test | 10 000 |
 
-Une ligne = un paragraphe de contrat = une étiquette. Les 100 types sont ceux qui restent
-dans LexGLUE ; les titres de section du contrat servent d'étiquette.
+Une ligne = un paragraphe de contrat = une étiquette. Les titres de section du contrat servent
+d'étiquette.
+
+**Construction par LexGLUE.** À partir du corpus LEDGAR d'origine (environ 850 000 clauses),
+LexGLUE ne garde que les **100 types les plus fréquents** (environ 80 000 clauses) : les types
+rares du corpus d'origine sont donc exclus, et un outil réel en rencontrerait d'autres que le
+modèle ne connaît pas. Le découpage est **chronologique** : train 2016-2017, validation 2018,
+test 2019. Le test mesure donc un décalage dans le temps, plus exigeant qu'un tirage aléatoire,
+mais le vocabulaire et les pratiques de rédaction changent aussi d'une année à l'autre.
 
 ### Longueur des clauses (en mots)
 

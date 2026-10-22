@@ -44,7 +44,8 @@ Le macro-F1 est la métrique principale : les classes sont très déséquilibré
 Sur ce run (5 époques), Legal-BERT ne bat pas le baseline : accuracy équivalente, macro-F1
 plus faible de 2,6 points (intervalle de confiance qui exclut zéro). Voir `MODEL_CARD.md`.
 
-Source : `metrics/evaluation.json` du run. Le détail (par type de clause, calibration, retrieval,
+Source : `results/metrics/evaluation.json`, copie versionnée du run final (métriques, figures,
+`AUDIT.md`, configuration et `run_info.json`). Le détail (par type de clause, calibration, retrieval,
 audit) est dans `MODEL_CARD.md` et `AUDIT.md`.
 
 ## Installation

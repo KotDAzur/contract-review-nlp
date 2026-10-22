@@ -1,0 +1,5 @@
+classification:
+  model: nlpaueb/legal-bert-base-uncased
+  epochs: 12
+  patience: 3
+  class_weights: sqrt_inv
