@@ -6,7 +6,12 @@ from sklearn.pipeline import make_pipeline
 from sklearn.svm import LinearSVC
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from transformers import DataCollatorWithPadding, get_linear_schedule_with_warmup
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    DataCollatorWithPadding,
+    get_linear_schedule_with_warmup,
+)
 
 NO_DECAY = ("bias", "LayerNorm.weight")
 
@@ -63,6 +68,12 @@ def make_loader(tokenizer, texts, labels, max_len, batch_size, shuffle=False, se
         generator=torch.Generator().manual_seed(seed),
         collate_fn=DataCollatorWithPadding(tokenizer),
     )
+
+
+def load_classifier(path, device):
+    """Tokenizer et modèle sauvegardés par l'étape classification."""
+    tokenizer = AutoTokenizer.from_pretrained(path)
+    return tokenizer, AutoModelForSequenceClassification.from_pretrained(path).to(device)
 
 
 def softmax(logits: np.ndarray) -> np.ndarray:

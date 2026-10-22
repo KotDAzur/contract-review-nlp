@@ -35,7 +35,7 @@ def encode(model, texts, prefix: str = "") -> np.ndarray:
         [prefix + text for text in texts],
         batch_size=128,
         normalize_embeddings=True,
-        show_progress_bar=True,
+        show_progress_bar=len(texts) > 100,
     ).astype("float32")
 
 

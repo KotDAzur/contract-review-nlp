@@ -84,6 +84,17 @@ def make_context(exp: str) -> Context:
     return ctx
 
 
+def find_run(exp: str) -> Path:
+    """Dossier du run le plus récent de l'expérience qui a un classifieur entraîné."""
+    runs = sorted((ROOT / "artifacts" / "runs").glob(f"*_{exp}"))
+    trained = [run for run in runs if (run / "models" / "classifier").exists()]
+    if not trained:
+        raise SystemExit(
+            f"Aucun run entraîné pour '{exp}' : lancez `uv run main.py run --exp {exp}`."
+        )
+    return trained[-1]
+
+
 def git(*args: str) -> str:
     result = subprocess.run(["git", *args], check=False, cwd=ROOT, capture_output=True, text=True)
     return result.stdout.strip()

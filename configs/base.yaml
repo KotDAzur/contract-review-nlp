@@ -9,7 +9,7 @@ classification:
   max_len: 256
   batch_size: 32
   eval_batch_size: 128
-  epochs: 3
+  epochs: 5
   lr: 3.0e-5
   weight_decay: 0.01
   warmup_ratio: 0.1
