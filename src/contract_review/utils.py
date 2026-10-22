@@ -101,16 +101,20 @@ def git(*args: str) -> str:
 
 
 def write_run_info(ctx: Context, durations: dict[str, float]) -> None:
-    """Trace de reproductibilité. Les durées s'accumulent si on relance d'autres étapes."""
+    """Trace de reproductibilité, par étape : un run repris sur une autre machine (Colab puis
+    PC par exemple) garde, pour chaque étape, le GPU, le code et les librairies qui l'ont fait."""
     path = ctx.run_dir / "run_info.json"
     info = json.loads(path.read_text()) if path.exists() else {}
-    info.update(
-        seed=ctx.cfg["seed"],
-        git_hash=git("rev-parse", "HEAD"),
-        git_dirty=bool(git("status", "--porcelain")),
-        python=sys.version.split()[0],
-        libraries={name: version(name) for name in LIBRARIES},
-        gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+    environment = {
+        "git_hash": git("rev-parse", "HEAD"),
+        "git_dirty": bool(git("status", "--porcelain")),
+        "python": sys.version.split()[0],
+        "libraries": {name: version(name) for name in LIBRARIES},
+        "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+    }
+    info["seed"] = ctx.cfg["seed"]
+    steps = info.setdefault("steps", {})
+    steps.update(
+        {name: {"duration_s": seconds, **environment} for name, seconds in durations.items()}
     )
-    info.setdefault("durations_s", {}).update(durations)
     path.write_text(json.dumps(info, indent=2))
