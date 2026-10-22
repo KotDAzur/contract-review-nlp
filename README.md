@@ -55,8 +55,9 @@ cd contract-review-nlp
 uv sync
 ```
 
-Sous Windows, `uv sync` installe la build CUDA 12.6 de PyTorch (celle de PyPI est CPU
-seulement). Ailleurs, c'est la build PyPI standard.
+Sous Windows et sous Linux, `uv sync` installe la build CUDA 12.6 de PyTorch : celle de PyPI
+est CPU seulement sous Windows, et en CUDA 13 sous Linux, que les pilotes plus anciens (Colab
+par exemple) ne savent pas utiliser. Sous macOS, c'est la build PyPI standard.
 
 Le dataset et les modèles (Legal-BERT, MiniLM, BGE, MarianMT) sont téléchargés depuis le Hub
 Hugging Face au premier lancement.
@@ -77,6 +78,14 @@ Le dossier du run porte la **date du jour** (`<date>_<exp>`) : relancer une éta
 lendemain crée un nouveau dossier, vide. Pour reprendre un run, le faire le même jour.
 
 La durée de chaque étape est enregistrée dans `run_info.json`.
+
+### Sans GPU local : Google Colab
+
+[`notebooks/colab_runner.ipynb`](notebooks/colab_runner.ipynb) lance le pipeline sur le GPU
+gratuit de Colab : il clone le dépôt, installe les dépendances avec `uv sync --locked`, vérifie
+que le GPU est bien utilisé, lance les étapes et copie le run sur Google Drive (la machine
+Colab est effacée à la déconnexion). Ouvrir le notebook dans Colab, choisir un GPU
+(*Exécution → Modifier le type d'exécution*), puis exécuter les cellules dans l'ordre.
 
 ### Classer une clause
 
@@ -107,7 +116,7 @@ Chaque run écrit dans `artifacts/runs/<date>_<exp>/` (ignoré par git) :
 
 ```
 config.yaml        config complète utilisée
-run_info.json      seed, hash git, versions des librairies, GPU, durée de chaque étape
+run_info.json      par étape : durée, GPU, hash git, versions des librairies
 AUDIT.md           rapport d'audit : constats chiffrés, tableaux, limites
 logs/run.log
 data/  models/  metrics/  figures/  retrieval/

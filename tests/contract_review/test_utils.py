@@ -89,9 +89,15 @@ def test_write_run_info(tmp_path, monkeypatch):
     ctx = utils.Context(cfg={"seed": 42}, run_dir=tmp_path, log=logging.getLogger("test"))
 
     utils.write_run_info(ctx, {"data": 1.5})
+    # Même run repris sur une autre machine : l'étape suivante a son propre GPU
+    monkeypatch.setattr(utils.torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(utils.torch.cuda, "get_device_name", lambda index: "GPU de test")
+    utils.write_run_info(ctx, {"classification": 60.0})
 
     info = json.loads((tmp_path / "run_info.json").read_text())
     assert info["seed"] == 42
-    assert info["durations_s"] == {"data": 1.5}
-    assert info["python"] == sys.version.split()[0]
-    assert "torch" in info["libraries"]
+    assert info["steps"]["data"]["duration_s"] == 1.5
+    assert info["steps"]["data"]["python"] == sys.version.split()[0]
+    assert "torch" in info["steps"]["data"]["libraries"]
+    assert info["steps"]["data"]["gpu"] != "GPU de test"  # l'étape déjà écrite garde sa trace
+    assert info["steps"]["classification"]["gpu"] == "GPU de test"
