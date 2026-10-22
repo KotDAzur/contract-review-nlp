@@ -4,11 +4,6 @@ from matplotlib.figure import Figure
 from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support
 
 
-def softmax(logits: np.ndarray) -> np.ndarray:
-    exp = np.exp(logits - logits.max(axis=1, keepdims=True))
-    return exp / exp.sum(axis=1, keepdims=True)
-
-
 def metrics(labels, preds) -> dict[str, float]:
     accuracy = accuracy_score(labels, preds)
     return {
@@ -34,15 +29,6 @@ def with_ci(point: dict, samples: pd.DataFrame) -> dict:
         name: {"value": round(float(v), 4), "ci": [round(low[name], 4), round(high[name], 4)]}
         for name, v in point.items()
     }
-
-
-def group_ids(names: list[str], groups: list[list[str]]) -> np.ndarray:
-    """Identifiant de groupe par label : les quasi-synonymes partagent le même."""
-    ids = np.arange(len(names))
-    for group in groups:
-        members = [names.index(name) for name in group]
-        ids[members] = min(members)
-    return ids
 
 
 def tolerant_accuracy(labels, preds, ids: np.ndarray) -> float:

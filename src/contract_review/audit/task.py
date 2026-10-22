@@ -5,14 +5,13 @@ import re
 from dataclasses import dataclass
 from functools import partial
 
-import joblib
 import numpy as np
 import pandas as pd
 import torch
 from transformers import MarianMTModel, MarianTokenizer
 
 from contract_review.audit import process
-from contract_review.classification.task import predict_probs
+from contract_review.classification.task import predict_all
 from contract_review.data.process import group_ids, normalize
 from contract_review.data.task import load_ledgar
 from contract_review.evaluation.task import MODELS
@@ -38,19 +37,6 @@ class Audit:
     threshold: float  # seuil de confiance de production
     n_boot: int
     seed: int
-
-
-def predict_all(ctx, texts: list[str]) -> pd.DataFrame:
-    """Prédictions des deux modèles sur des textes quelconques."""
-    probs = predict_probs(ctx, texts)
-    baseline = joblib.load(ctx.dir("models") / "baseline.joblib")
-    return pd.DataFrame(
-        {
-            "pred_baseline": baseline.predict(texts),
-            "pred": probs.argmax(axis=1),
-            "confidence": probs.max(axis=1),
-        }
-    )
 
 
 def predict_batches(ctx, batches: dict[str, list[str]]) -> dict[str, pd.DataFrame]:

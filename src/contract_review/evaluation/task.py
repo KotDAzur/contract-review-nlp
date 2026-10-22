@@ -2,12 +2,10 @@
 
 import json
 
-import joblib
 import pandas as pd
-import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-from contract_review.classification import process as classification
+from contract_review.classification.task import predict_all
+from contract_review.data.process import group_ids
 from contract_review.data.task import load_ledgar
 from contract_review.evaluation import process
 
@@ -16,31 +14,12 @@ MODELS = {"baseline": "pred_baseline", "transformer": "pred"}  # nom -> colonne 
 
 def predict(ctx, ledgar) -> dict[str, pd.DataFrame]:
     """Prédictions des deux modèles sur la validation et le test."""
-    cfg = ctx.cfg["classification"]
-    models = ctx.dir("models")
-    baseline = joblib.load(models / "baseline.joblib")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = AutoTokenizer.from_pretrained(models / "classifier")
-    model = AutoModelForSequenceClassification.from_pretrained(models / "classifier").to(device)
-
     predictions = {}
     for split in ("validation", "test"):
         texts, labels = list(ledgar[split]["text"]), list(ledgar[split]["label"])
-        loader = classification.make_loader(
-            tokenizer, texts, labels, cfg["max_len"], cfg["eval_batch_size"]
-        )
-        logits = classification.predict_logits(
-            model, loader, device, use_amp=cfg["fp16"] and device.type == "cuda"
-        )
-        probs = process.softmax(logits)
-        predictions[split] = pd.DataFrame(
-            {
-                "label": labels,
-                "pred_baseline": baseline.predict(texts),
-                "pred": probs.argmax(axis=1),
-                "confidence": probs.max(axis=1),
-            }
-        )
+        predictions[split] = predict_all(ctx, texts).assign(label=labels)[
+            ["label", "pred_baseline", "pred", "confidence"]
+        ]
     return predictions
 
 
@@ -79,7 +58,7 @@ def run(ctx) -> None:
     cfg = ctx.cfg["evaluation"]
     ledgar = load_ledgar(ctx.cfg["data"])
     names = ledgar["train"].features["label"].names
-    ids = process.group_ids(names, ctx.cfg["synonym_groups"])
+    ids = group_ids(names, ctx.cfg["synonym_groups"])
 
     predictions = predict(ctx, ledgar)
     val, test = predictions["validation"], predictions["test"]

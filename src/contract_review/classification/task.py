@@ -4,6 +4,7 @@ import json
 
 import joblib
 import numpy as np
+import pandas as pd
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
@@ -19,6 +20,19 @@ def predict_probs(ctx, texts) -> np.ndarray:
     loader = process.make_loader(tokenizer, texts, None, cfg["max_len"], cfg["eval_batch_size"])
     use_amp = cfg["fp16"] and device.type == "cuda"
     return process.softmax(process.predict_logits(model, loader, device, use_amp))
+
+
+def predict_all(ctx, texts: list[str]) -> pd.DataFrame:
+    """Prédictions du baseline (`pred_baseline`) et du transformer (`pred`, `confidence`)."""
+    baseline = joblib.load(ctx.dir("models") / "baseline.joblib")
+    probs = predict_probs(ctx, texts)
+    return pd.DataFrame(
+        {
+            "pred_baseline": baseline.predict(texts),
+            "pred": probs.argmax(axis=1),
+            "confidence": probs.max(axis=1),
+        }
+    )
 
 
 def run(ctx) -> None:
