@@ -4,8 +4,9 @@ Ce document décrit ce que fait le modèle, comment il a été entraîné et év
 **ce pour quoi il ne doit pas servir**. Les données sont décrites dans `DATA_CARD.md`, les
 résultats détaillés et l'audit de biais dans `AUDIT.md` (généré dans le dossier de chaque run).
 
-Les chiffres viennent du run final, versionné dans `results/` ; chaque tableau indique le
-fichier où les lire.
+Les chiffres viennent de deux runs versionnés dans `results/` : `legalbert` (5 époques, sans
+poids de classes) et `legalbert_long` (12 époques, poids de classes `sqrt_inv`). Chaque tableau
+indique le fichier où les lire.
 
 ## Résumé
 
@@ -84,11 +85,11 @@ uv run main.py search "termination clauses with a 30-day notice period" --k 5
 | Optimiseur | AdamW, `lr` 3e-5, `weight_decay` 0,01 (sauf biais et LayerNorm) |
 | Planning | échauffement de 10 % puis décroissance linéaire |
 | Batch | 32, padding dynamique, `fp16` si CUDA disponible, clipping du gradient à 1,0 |
-| Époques | 5 au maximum ; la meilleure époque sur le macro-F1 de validation est conservée. Sur le run final c'est la 5e, et l'arrêt anticipé ne s'est pas déclenché |
-| Arrêt anticipé | patience de 2 époques |
-| Poids de classes | désactivés par défaut (`class_weights: sqrt_inv` disponible) |
+| Époques | `legalbert` : 5 ; `legalbert_long` : 12. La meilleure époque sur le macro-F1 de validation est conservée (la 5e et la 11e) ; l'arrêt anticipé ne s'est déclenché dans aucun des deux |
+| Arrêt anticipé | patience de 2 époques (3 pour `legalbert_long`) |
+| Poids de classes | désactivés pour `legalbert`, `sqrt_inv` (racine de l'inverse de la fréquence) pour `legalbert_long` |
 | Seed | 42 (un seul entraînement) |
-| Matériel et durée | NVIDIA GeForce RTX 4070, environ 5 minutes par époque (`run_info.json` donne le GPU et la durée de chaque étape) |
+| Matériel et durée | NVIDIA GeForce RTX 4070, environ 5 minutes par époque (27 min pour `legalbert`, 64 min pour `legalbert_long` ; `run_info.json` donne le GPU et la durée de chaque étape) |
 
 La validation sert au choix du meilleur époque et du seuil de confiance. Le jeu de test n'est
 utilisé qu'à partir de l'étape `evaluation`, et le seuil n'est jamais choisi dessus.
@@ -99,14 +100,16 @@ Toutes les métriques sont calculées sur les 10 000 clauses de test, avec un in
 confiance à 95 % par bootstrap (1 000 rééchantillons). Le **macro-F1 est la métrique
 principale**, parce que les classes sont déséquilibrées.
 
-| | Baseline TF-IDF | Legal-BERT affiné | Écart (avec IC) |
+| | Baseline TF-IDF | Legal-BERT court (5 ép.) | Legal-BERT long (12 ép., poids) |
 |---|---|---|---|
-| Accuracy (= micro-F1) | 0,8809 [0,8742 ; 0,8875] | 0,8777 [0,8713 ; 0,8840] | -0,0032 [-0,0086 ; +0,0015], non significatif |
-| Macro-F1 | 0,8284 [0,8133 ; 0,8381] | 0,8021 [0,7894 ; 0,8153] | **-0,0263 [-0,0379 ; -0,0089], significatif** |
-| Weighted-F1 | 0,8756 [0,8683 ; 0,8825] | 0,8732 [0,8663 ; 0,8798] | -0,0024 [-0,0082 ; +0,0028], non significatif |
-| Accuracy tolérante aux synonymes | 0,9091 | 0,9132 | (pas d'intervalle) |
+| Accuracy (= micro-F1) | 0,8809 [0,8742 ; 0,8875] | 0,8777 [0,8713 ; 0,8840] | 0,8836 [0,8774 ; 0,8897] |
+| Macro-F1 | 0,8284 [0,8133 ; 0,8381] | 0,8021 [0,7894 ; 0,8153] | 0,8288 [0,8131 ; 0,8390] |
+| Weighted-F1 | 0,8756 [0,8683 ; 0,8825] | 0,8732 [0,8663 ; 0,8798] | 0,8822 [0,8758 ; 0,8885] |
+| Accuracy tolérante aux synonymes | 0,9091 | 0,9132 | 0,9153 |
+| Écart de macro-F1 avec le baseline | | **-0,0263 [-0,0379 ; -0,0089], significatif** | +0,0004 [-0,0099 ; +0,0114], non significatif |
+| Écart d'accuracy avec le baseline | | -0,0032 [-0,0086 ; +0,0015], non significatif | +0,0027 [-0,0023 ; +0,0078], non significatif |
 
-Source : `metrics/evaluation.json`. L'écart transformer moins baseline est calculé sur les
+Source : `results/<run>/metrics/evaluation.json`. L'écart transformer moins baseline est calculé sur les
 mêmes rééchantillons, donc apparié : c'est lui qui répond à « le transformer vaut-il son
 coût ? ».
 
@@ -119,16 +122,22 @@ dépasse, et l'écart publié entre ce SVM et Legal-BERT n'est que de 1,2 et 1,6
 protocole de LexGLUE est plus long que le nôtre (jusqu'à 20 époques, séquences de 512 tokens,
 meilleur de 5 seeds).
 
-**Lecture du run final.** Le baseline TF-IDF atteint la référence publiée de Legal-BERT.
-Legal-BERT affiné pendant 5 époques ne la dépasse pas : accuracy équivalente, et un macro-F1
-**plus faible de 2,6 points**, dont l'intervalle de confiance exclut zéro. Sur ce run, le
-transformer ne justifie donc pas son coût en qualité de classification. Deux indices
-suggèrent un entraînement inachevé plutôt qu'un modèle inadapté : le macro-F1 de validation
-progresse encore à la dernière époque (0,709, 0,761, 0,793, 0,810, 0,814) sans que l'arrêt
-anticipé se déclenche, et l'écart entre l'accuracy (0,878) et le macro-F1 (0,802) indique que
-les types rares sont sous-appris. Ce qui reste en faveur du transformer est sa probabilité
-calibrée (ECE de 0,047), qui permet le seuil de revue humaine ci-dessous ; l'équivalent n'a
-pas été testé pour le baseline, dont les scores SVM ne sont pas des probabilités.
+**Lecture des deux runs.** Le baseline TF-IDF atteint la référence publiée de Legal-BERT.
+Avec 5 époques et sans poids de classes, Legal-BERT ne la dépasse pas : accuracy équivalente
+et macro-F1 **plus faible de 2,6 points**, dont l'intervalle de confiance exclut zéro. Le
+macro-F1 de validation progressait encore à la dernière époque (0,709, 0,761, 0,793, 0,810,
+0,814), ce qui suggérait un entraînement inachevé. Le second run le confirme : avec 12 époques
+et des poids de classes, le macro-F1 monte à 0,829 et **rejoint le baseline** (écart de
++0,04 point, non significatif). Il ne le dépasse pas : sur LEDGAR, le transformer n'apporte
+pas de gain mesurable en qualité de classification (LexGLUE publie un écart de seulement 1,2
+point entre un SVM TF-IDF et Legal-BERT). Un seul seed par run : un écart inférieur à 1 point
+est dans le bruit.
+
+**Le prix du second run : la calibration.** L'ECE passe de 0,047 à 0,091 : après 12 époques,
+le modèle est sur-confiant (perte d'entraînement de 0,03). Le seuil de confiance monte à 0,998
+et la part étiquetée automatiquement baisse de 68,4 % à 65,4 % pour la même précision. Le run
+court est donc le mieux calibré, le run long le meilleur en F1 des types rares : aucun ne
+gagne sur tout.
 
 **Où se perd l'écart.** Il se concentre sur les types rares. En moyenne par type, le F1 du
 transformer est égal à celui du baseline pour les 16 types de tête (0,923 contre 0,921) et
@@ -139,6 +148,10 @@ Books (0, avec 4 et 2 exemples de test seulement). La plupart des erreurs sont d
 confusions entre types quasi synonymes : Tax Withholdings et Withholdings (38 et 13 clauses),
 Definitions et Defined Terms (25 et 18), Integration vers Entire Agreements (21),
 Applicable Laws vers Governing Laws (39).
+
+Avec le run long, le F1 moyen des 22 types rares monte de 0,587 à 0,680 (baseline : 0,699),
+celui des types de tête de 0,923 à 0,930, et Books, Assigns et Applicable Laws passent de 0, 0
+et 0,11 à 0,67, 0,29 et 0,32.
 
 Les résultats par type (`metrics/per_class.csv`), les 20 confusions les plus fréquentes
 (`metrics/confusions.csv`) et les 15 types les plus faibles (`figures/weakest_classes.png`) se
@@ -151,14 +164,14 @@ La confiance est la probabilité maximale du modèle. Le seuil est le plus bas q
 test. Au-dessus du seuil, la clause peut être étiquetée automatiquement ; en dessous,
 `needs_review` vaut `true`.
 
-| | Valeur |
-|---|---|
-| Seuil de confiance | 0,958 (choisi sur la validation) |
-| Part étiquetée automatiquement (test) | 68,4 % (validation : 69,3 %) |
-| Précision de ces clauses (test) | 96,7 % (validation : 97,0 %), un peu sous la cible de 97 % |
-| ECE (écart moyen entre confiance et exactitude) | 0,047 |
+| | `legalbert` (court) | `legalbert_long` |
+|---|---|---|
+| Seuil de confiance | 0,958 | 0,998 |
+| Part étiquetée automatiquement (test) | 68,4 % (validation : 69,3 %) | 65,4 % (validation : 67,2 %) |
+| Précision de ces clauses (test) | 96,7 % (validation : 97,0 %), un peu sous la cible | 97,0 % (validation : 97,0 %) |
+| ECE (écart moyen entre confiance et exactitude) | 0,047 | 0,091 |
 
-Source : `metrics/evaluation.json` (clés `selective` et `ece`) et `figures/reliability.png`,
+Source : `metrics/evaluation.json` de chaque run (clés `selective` et `ece`) et `figures/reliability.png`,
 `figures/coverage_precision.png`. Si le test ne confirme pas les 97 % obtenus sur la
 validation, c'est le chiffre du test qui fait foi.
 
@@ -199,12 +212,30 @@ exclues des résultats.
   automatiquement, avec la part qui serait étiquetée automatiquement et sa précision ;
 - la **fuite** entre train et test.
 
-| Constat de l'audit | Résultat |
-|---|---|
-| Écarts de tranche significatifs | 5 sur 23 tranches testables : clauses courtes -2,1 points, parties de type société +2,4, famille crédit +3,3, fusions-acquisitions +4,0, clauses déjà vues dans le train +8,0 (le baseline en montre aussi) |
-| Sensibilité au genre, à la juridiction, à la forme sociale | Faible. Genre : 1,0 % de prédictions changées (n = 299), 0,0 % dans l'autre sens (n = 37 et 8, petits). Juridiction : 0,9 % pour le témoin Texas, 1,3 à 1,6 % pour France, Angleterre et Allemagne, seule l'Allemagne est significative (+0,7 point). Forme sociale : 2,7 % pour le témoin Ltd. et GmbH, 5,0 % pour S.A.S. (+2,3 points, significatif) |
-| Anglais contre français : accuracy et part étiquetée automatiquement | 0,883 en anglais contre 0,240 en français (300 clauses traduites automatiquement) ; 3,3 % des clauses françaises seraient étiquetées automatiquement, avec une précision de 0,800 : le modèle n'est pas utilisable en français |
-| Accuracy avec et sans les clauses du test déjà vues | 0,878 avec, 0,873 sans (4,5 % de doublons) : la fuite change peu le résultat global, mais ces clauses sont presque toutes bien classées (0,973) |
+L'audit a été lancé sur chacun des deux runs ; les deux concordent sur l'essentiel.
+
+| Constat de l'audit | `legalbert` (court) | `legalbert_long` |
+|---|---|---|
+| Écarts de tranche significatifs (sur 23) | 5 : clauses courtes -2,1 points, parties de type société +2,4, famille crédit +3,3, fusions-acquisitions +4,0, clauses déjà vues dans le train +8,0 | 5 : parties de type société +2,2, particuliers -5,6, crédit +3,1, baux -6,6, clauses déjà vues +9,4 |
+| Genre (masculin vers féminin) | 1,0 % de prédictions changées (n = 299) | 2,0 % (n = 299) |
+| Juridiction (témoin Texas, puis France, Angleterre, Allemagne) | 0,9 % ; 1,3 à 1,6 % ; seule l'Allemagne est significative (+0,7 point) | 4,5 % ; 5,0 à 5,8 % ; aucun écart au témoin significatif |
+| Forme sociale (témoin Ltd., puis GmbH, S.A.S.) | 2,7 % ; 2,7 % ; 5,0 % (+2,3 points, significatif) | 2,3 % ; 1,8 % ; 4,1 % (+1,8 point, non significatif) |
+| Anglais contre français : accuracy | 0,883 contre 0,240 (300 clauses traduites automatiquement) | 0,887 contre 0,197 |
+| Français : part étiquetée automatiquement | 3,3 %, précision 0,800 | 1,7 %, précision 0,800 |
+| Accuracy avec et sans les clauses du test déjà vues (4,5 %) | 0,878 contre 0,873 | 0,884 contre 0,879 |
+
+Lectures :
+
+- **Le français est hors de portée** des deux modèles : l'outil n'est pas utilisable en
+  français.
+- **Les clauses déjà vues dans le train** sont presque toutes bien classées, ce qui gonfle
+  légèrement le score global (0,5 point).
+- **Le run long est plus sensible aux perturbations de juridiction** (4,5 % de prédictions
+  changées dès le témoin Texas, contre 0,9 %), à cause de la confusion Applicable Laws et
+  Governing Laws, que les poids de classes ont rendue plus fréquente. Le surplus par rapport au
+  témoin reste, lui, non significatif.
+- **Particuliers et baux** deviennent des tranches à écart significatif dans le run long :
+  ces écarts d'accuracy sont à surveiller, mais les tranches restent des heuristiques par regex.
 
 ## Limites connues
 

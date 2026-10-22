@@ -1,0 +1,85 @@
+{
+  "seed": 42,
+  "steps": {
+    "data": {
+      "duration_s": 18.1,
+      "git_hash": "25351ab22b0c4cc8eb7d5dcdcc9b1d9126b99708",
+      "git_dirty": false,
+      "python": "3.11.15",
+      "libraries": {
+        "torch": "2.14.1+cu126",
+        "transformers": "5.20.2",
+        "datasets": "5.1.0",
+        "scikit-learn": "1.9.1",
+        "sentence-transformers": "6.2.0",
+        "faiss-cpu": "1.15.1",
+        "numpy": "2.4.6"
+      },
+      "gpu": "NVIDIA GeForce RTX 4070"
+    },
+    "classification": {
+      "duration_s": 3819.7,
+      "git_hash": "25351ab22b0c4cc8eb7d5dcdcc9b1d9126b99708",
+      "git_dirty": false,
+      "python": "3.11.15",
+      "libraries": {
+        "torch": "2.14.1+cu126",
+        "transformers": "5.20.2",
+        "datasets": "5.1.0",
+        "scikit-learn": "1.9.1",
+        "sentence-transformers": "6.2.0",
+        "faiss-cpu": "1.15.1",
+        "numpy": "2.4.6"
+      },
+      "gpu": "NVIDIA GeForce RTX 4070"
+    },
+    "evaluation": {
+      "duration_s": 46.6,
+      "git_hash": "25351ab22b0c4cc8eb7d5dcdcc9b1d9126b99708",
+      "git_dirty": false,
+      "python": "3.11.15",
+      "libraries": {
+        "torch": "2.14.1+cu126",
+        "transformers": "5.20.2",
+        "datasets": "5.1.0",
+        "scikit-learn": "1.9.1",
+        "sentence-transformers": "6.2.0",
+        "faiss-cpu": "1.15.1",
+        "numpy": "2.4.6"
+      },
+      "gpu": "NVIDIA GeForce RTX 4070"
+    },
+    "retrieval": {
+      "duration_s": 987.8,
+      "git_hash": "25351ab22b0c4cc8eb7d5dcdcc9b1d9126b99708",
+      "git_dirty": false,
+      "python": "3.11.15",
+      "libraries": {
+        "torch": "2.14.1+cu126",
+        "transformers": "5.20.2",
+        "datasets": "5.1.0",
+        "scikit-learn": "1.9.1",
+        "sentence-transformers": "6.2.0",
+        "faiss-cpu": "1.15.1",
+        "numpy": "2.4.6"
+      },
+      "gpu": "NVIDIA GeForce RTX 4070"
+    },
+    "audit": {
+      "duration_s": 58.9,
+      "git_hash": "25351ab22b0c4cc8eb7d5dcdcc9b1d9126b99708",
+      "git_dirty": false,
+      "python": "3.11.15",
+      "libraries": {
+        "torch": "2.14.1+cu126",
+        "transformers": "5.20.2",
+        "datasets": "5.1.0",
+        "scikit-learn": "1.9.1",
+        "sentence-transformers": "6.2.0",
+        "faiss-cpu": "1.15.1",
+        "numpy": "2.4.6"
+      },
+      "gpu": "NVIDIA GeForce RTX 4070"
+    }
+  }
+}

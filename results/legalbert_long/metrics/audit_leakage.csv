@@ -1,0 +1,3 @@
+model,duplicate_share,accuracy_all,accuracy_without_duplicates,accuracy_without_duplicates_low,accuracy_without_duplicates_high
+baseline,0.0449,0.8809,0.8759292220709873,0.8692283530520364,0.8823159878546749
+transformer,0.0449,0.8836,0.878546749031515,0.871741178934143,0.885352319128887

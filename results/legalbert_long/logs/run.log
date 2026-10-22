@@ -1,0 +1,22 @@
+2026-10-22 21:41:36,281 INFO étape data
+2026-10-22 21:41:54,389 INFO data : {'train': 60000, 'test': 10000, 'validation': 10000} | {'n_labels': 100, 'most_frequent': {'label': 'Governing Laws', 'count': 3167}, 'least_frequent': {'label': 'Books', 'count': 23}, 'imbalance_ratio': 137.7}
+2026-10-22 21:41:54,395 INFO étape classification
+2026-10-22 21:42:28,646 INFO baseline TF-IDF, validation : {'accuracy': 0.8835, 'macro_f1': 0.8185421446299723}
+2026-10-22 21:47:51,003 INFO {'epoch': 1, 'train_loss': 2.5881275660355887, 'val_accuracy': 0.8218, 'val_macro_f1': 0.6946788362926453}
+2026-10-22 21:53:05,131 INFO {'epoch': 2, 'train_loss': 0.7539705460627874, 'val_accuracy': 0.8473, 'val_macro_f1': 0.7619349140964191}
+2026-10-22 21:58:19,386 INFO {'epoch': 3, 'train_loss': 0.5181833424647649, 'val_accuracy': 0.862, 'val_macro_f1': 0.7851727653049089}
+2026-10-22 22:03:32,607 INFO {'epoch': 4, 'train_loss': 0.3867165685335795, 'val_accuracy': 0.869, 'val_macro_f1': 0.7981012913044012}
+2026-10-22 22:08:43,466 INFO {'epoch': 5, 'train_loss': 0.2916092080871264, 'val_accuracy': 0.8772, 'val_macro_f1': 0.8165210555584566}
+2026-10-22 22:13:54,684 INFO {'epoch': 6, 'train_loss': 0.21136855341692765, 'val_accuracy': 0.8757, 'val_macro_f1': 0.8106650467216413}
+2026-10-22 22:19:11,622 INFO {'epoch': 7, 'train_loss': 0.15689520735715826, 'val_accuracy': 0.8789, 'val_macro_f1': 0.8168503646224772}
+2026-10-22 22:24:28,072 INFO {'epoch': 8, 'train_loss': 0.11461855711042881, 'val_accuracy': 0.8812, 'val_macro_f1': 0.817563593016798}
+2026-10-22 22:29:44,177 INFO {'epoch': 9, 'train_loss': 0.08065066624730825, 'val_accuracy': 0.8802, 'val_macro_f1': 0.8216525578448207}
+2026-10-22 22:35:00,513 INFO {'epoch': 10, 'train_loss': 0.05652512658995887, 'val_accuracy': 0.8815, 'val_macro_f1': 0.8205807145021038}
+2026-10-22 22:40:18,834 INFO {'epoch': 11, 'train_loss': 0.03884652372238537, 'val_accuracy': 0.8844, 'val_macro_f1': 0.8252492700720292}
+2026-10-22 22:45:33,661 INFO {'epoch': 12, 'train_loss': 0.028279030170353752, 'val_accuracy': 0.885, 'val_macro_f1': 0.8249274606381715}
+2026-10-22 22:45:34,112 INFO étape evaluation
+2026-10-22 22:46:20,757 INFO evaluation, macro-F1 test : {'baseline': 0.8284, 'transformer': 0.8288}
+2026-10-22 22:52:14,472 INFO étape retrieval
+2026-10-22 23:08:42,139 INFO retrieval, P@10 clause -> clauses : {'bm25': 0.7397, 'minilm': 0.7214, 'bge': 0.759, 'hybrid': 0.877}
+2026-10-22 23:08:42,251 INFO étape audit
+2026-10-22 23:09:41,109 INFO audit : 10 écarts de tranche signalés
