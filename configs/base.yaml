@@ -18,6 +18,20 @@ classification:
   fp16: true  # actif seulement si CUDA est disponible
   class_weights: null  # null ou sqrt_inv
 
+retrieval:
+  n_queries: 1000  # clauses de test servant de requêtes
+  k: 10
+  top_labels: 2  # types retenus par le routage question -> type
+  hybrid_model: bge
+  max_seq_length: 256
+  queries_file: configs/lawyer_queries.yaml
+  dense_models:
+    minilm:
+      name: sentence-transformers/all-MiniLM-L6-v2
+      query_prefix: ""
+    bge:
+      name: BAAI/bge-small-en-v1.5
+      query_prefix: "Represent this sentence for searching relevant passages: "  # questions seulement
 evaluation:
   n_bootstrap: 1000
   target_precision: 0.97  # seuil de confiance choisi sur la validation

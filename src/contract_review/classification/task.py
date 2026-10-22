@@ -11,6 +11,18 @@ from contract_review.classification import process
 from contract_review.data.task import load_ledgar
 
 
+def predict_probs(ctx, texts) -> np.ndarray:
+    """Probabilités par type de clause, avec le classifieur entraîné par l'étape classification."""
+    cfg = ctx.cfg["classification"]
+    path = ctx.dir("models") / "classifier"
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    tokenizer = AutoTokenizer.from_pretrained(path)
+    model = AutoModelForSequenceClassification.from_pretrained(path).to(device)
+    loader = process.make_loader(tokenizer, texts, None, cfg["max_len"], cfg["eval_batch_size"])
+    use_amp = cfg["fp16"] and device.type == "cuda"
+    return process.softmax(process.predict_logits(model, loader, device, use_amp))
+
+
 def run(ctx) -> None:
     cfg = ctx.cfg["classification"]
     ledgar = load_ledgar(ctx.cfg["data"])
