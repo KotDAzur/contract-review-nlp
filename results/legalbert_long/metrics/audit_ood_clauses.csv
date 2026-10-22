@@ -1,0 +1,25 @@
+lang,expected,transformer,confidence,baseline,text
+fr,Governing Laws,Interpretations,0.9937615,Expenses,Le présent contrat est régi par le droit français et interprété conformément à celui-ci.
+fr,Confidentiality,Confidentiality,0.98480195,Counterparts,Chaque partie s'engage à conserver confidentielles les informations confidentielles de l'a
+fr,Terminations,Terms,0.92121404,Modifications,Chaque partie peut résilier le présent contrat à tout moment moyennant un préavis écrit de
+fr,Notices,Notices,0.9996153,Modifications,Toute notification prévue par le présent contrat doit être faite par écrit et envoyée par 
+fr,Severability,Severability,0.817847,Terms,"Si une stipulation du présent contrat est déclarée nulle ou inapplicable, les autres stipu"
+fr,Entire Agreements,Binding Effects,0.89802885,Modifications,Le présent contrat constitue l'intégralité de l'accord entre les parties sur son objet et 
+fr,Assignments,Terms,0.5263894,Counterparts,Aucune partie ne peut céder ou transférer ses droits ou obligations au titre du présent co
+fr,Counterparts,Terms,0.34530696,Amendments,"Le présent contrat peut être signé en plusieurs exemplaires, chacun étant considéré comme "
+fr,Amendments,Modifications,0.99452025,Modifications,Toute modification du présent contrat doit faire l'objet d'un avenant écrit signé par les 
+fr,Waivers,Terms,0.46496734,Severability,Le fait pour une partie de ne pas exercer un droit prévu au présent contrat ne constitue p
+fr,Indemnifications,Indemnity,0.9499753,Litigations,"Le prestataire s'engage à indemniser et à garantir le client contre toute réclamation, per"
+fr,Jurisdictions,Venues,0.35151714,Modifications,Tout litige relatif au présent contrat relève de la compétence exclusive des tribunaux de 
+en,Governing Laws,Governing Laws,0.9478316,Governing Laws,This Agreement shall be governed by and construed in accordance with the laws of France.
+en,Confidentiality,Confidentiality,0.9995148,Confidentiality,Each party shall keep confidential all confidential information of the other party and sha
+en,Terminations,Terminations,0.99769115,Terminations,Either party may terminate this Agreement at any time upon thirty (30) days' prior written
+en,Notices,Notices,0.99985766,Notices,Any notice required or permitted under this Agreement shall be in writing and sent by cert
+en,Severability,Severability,0.99881434,Severability,"If any provision of this Agreement is held to be invalid or unenforceable, the remaining p"
+en,Entire Agreements,Entire Agreements,0.9988949,Entire Agreements,This Agreement constitutes the entire agreement between the parties with respect to its su
+en,Assignments,Assignments,0.9995987,Assignments,Neither party may assign or transfer any of its rights or obligations under this Agreement
+en,Counterparts,Counterparts,0.9994759,Counterparts,"This Agreement may be executed in several counterparts, each of which shall be deemed an o"
+en,Amendments,Amendments,0.98912126,Amendments,No amendment of this Agreement shall be effective unless made in writing and signed by bot
+en,Waivers,Waivers,0.6951986,Waivers,The failure of a party to exercise any right under this Agreement shall not constitute a w
+en,Indemnifications,Indemnifications,0.6198904,Indemnifications,"The Contractor shall indemnify and hold harmless the Client from and against any claim, lo"
+en,Jurisdictions,Jurisdictions,0.96609795,Jurisdictions,Any dispute arising out of this Agreement shall be subject to the exclusive jurisdiction o

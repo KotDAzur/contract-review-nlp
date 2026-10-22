@@ -35,18 +35,21 @@ Deux choix reviennent dans toutes les étapes :
 Chiffres du run final sur le jeu de test (10 000 clauses), avec intervalle de confiance à 95 %.
 Le macro-F1 est la métrique principale : les classes sont très déséquilibrées.
 
-| | Baseline TF-IDF | Legal-BERT affiné |
-|---|---|---|
-| Accuracy | 0,881 | 0,878 |
-| Macro-F1 | 0,828 | 0,802 |
-| Part étiquetée automatiquement, à 97 % de précision visée | | 68,4 % (précision 96,7 %) |
+| | Baseline TF-IDF | Legal-BERT court (5 ép.) | Legal-BERT long (12 ép., poids de classes) |
+|---|---|---|---|
+| Accuracy | 0,881 | 0,878 | 0,884 |
+| Macro-F1 | 0,828 | 0,802 | 0,829 |
+| Part étiquetée automatiquement, à 97 % de précision visée | | 68,4 % (précision 96,7 %) | 65,4 % (précision 97,0 %) |
+| ECE (calibration, plus bas = mieux) | | 0,047 | 0,091 |
 
-Sur ce run (5 époques), Legal-BERT ne bat pas le baseline : accuracy équivalente, macro-F1
-plus faible de 2,6 points (intervalle de confiance qui exclut zéro). Voir `MODEL_CARD.md`.
+Avec 5 époques, Legal-BERT ne bat pas le baseline (macro-F1 plus faible de 2,6 points,
+intervalle de confiance qui exclut zéro). Avec 12 époques et des poids de classes, il le
+rejoint (écart de +0,04 point, non significatif) mais sans le dépasser, et il est moins bien
+calibré. Voir `MODEL_CARD.md`.
 
-Source : `results/metrics/evaluation.json`, copie versionnée du run final (métriques, figures,
-`AUDIT.md`, configuration et `run_info.json`). Le détail (par type de clause, calibration, retrieval,
-audit) est dans `MODEL_CARD.md` et `AUDIT.md`.
+Source : `results/legalbert/` et `results/legalbert_long/`, copies versionnées des deux runs
+(métriques, figures, `AUDIT.md`, configuration et `run_info.json`). Le détail (par type de
+clause, calibration, retrieval, audit) est dans `MODEL_CARD.md` et dans l'`AUDIT.md` de chaque run.
 
 ## Installation
 

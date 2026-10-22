@@ -1,0 +1,101 @@
+question,p@10,p@10_tolerant,constraint_hit@10,system
+termination clauses with a 30-day notice period,0.1,0.1,1.0,bm25
+governing law clauses under the laws of the State of Delaware,1.0,1.0,0.7,bm25
+governing law clauses under New York law,1.0,1.0,0.8,bm25
+confidentiality obligations that survive for two years,0.0,0.0,0.8,bm25
+disputes resolved by arbitration under American Arbitration Association rules,0.7,0.7,1.0,bm25
+notices must be sent by certified mail,1.0,1.0,0.8,bm25
+severability clause,0.4,0.4,,bm25
+entire agreement clause superseding all prior agreements,1.0,1.0,,bm25
+assignment requires the prior written consent of the other party,0.9,1.0,,bm25
+counterparts may be delivered by facsimile or electronic signature,1.0,1.0,1.0,bm25
+amendment only by written instrument signed by both parties,0.7,0.7,,bm25
+waiver of the right to a jury trial,0.9,0.9,,bm25
+indemnification of directors and officers,1.0,1.0,1.0,bm25
+parties submit to the exclusive jurisdiction of the courts of New York,0.0,0.2,1.0,bm25
+borrower pays all costs and expenses of the lender,0.8,1.0,0.7,bm25
+payments free of withholding taxes with additional amounts paid,0.3,0.3,0.6,bm25
+company shall maintain insurance coverage,1.0,1.0,,bm25
+compliance with the Foreign Corrupt Practices Act,1.0,1.0,1.0,bm25
+"further assurances, parties will execute additional documents",1.0,1.0,,bm25
+section headings are for convenience only,0.9,0.9,,bm25
+representations and warranties survive the closing,0.8,0.8,1.0,bm25
+executive base salary of a fixed annual amount,1.0,1.0,1.0,bm25
+paid vacation of four weeks per year,1.0,1.0,1.0,bm25
+non-disparagement covenant by the employee,0.5,0.5,,bm25
+acceleration of vesting upon a change in control,0.8,0.8,0.8,bm25
+termination clauses with a 30-day notice period,0.3,0.3,0.9,minilm
+governing law clauses under the laws of the State of Delaware,0.9,1.0,1.0,minilm
+governing law clauses under New York law,0.9,0.9,0.6,minilm
+confidentiality obligations that survive for two years,0.3,0.3,0.4,minilm
+disputes resolved by arbitration under American Arbitration Association rules,1.0,1.0,1.0,minilm
+notices must be sent by certified mail,1.0,1.0,0.5,minilm
+severability clause,1.0,1.0,,minilm
+entire agreement clause superseding all prior agreements,0.6,1.0,,minilm
+assignment requires the prior written consent of the other party,0.5,0.5,,minilm
+counterparts may be delivered by facsimile or electronic signature,1.0,1.0,1.0,minilm
+amendment only by written instrument signed by both parties,0.0,0.0,,minilm
+waiver of the right to a jury trial,0.9,0.9,,minilm
+indemnification of directors and officers,0.8,0.8,0.9,minilm
+parties submit to the exclusive jurisdiction of the courts of New York,0.3,0.7,0.7,minilm
+borrower pays all costs and expenses of the lender,0.6,0.9,1.0,minilm
+payments free of withholding taxes with additional amounts paid,0.0,0.5,0.0,minilm
+company shall maintain insurance coverage,1.0,1.0,,minilm
+compliance with the Foreign Corrupt Practices Act,1.0,1.0,1.0,minilm
+"further assurances, parties will execute additional documents",1.0,1.0,,minilm
+section headings are for convenience only,0.9,0.9,,minilm
+representations and warranties survive the closing,1.0,1.0,1.0,minilm
+executive base salary of a fixed annual amount,0.9,0.9,1.0,minilm
+paid vacation of four weeks per year,1.0,1.0,1.0,minilm
+non-disparagement covenant by the employee,0.5,0.5,,minilm
+acceleration of vesting upon a change in control,0.9,0.9,0.7,minilm
+termination clauses with a 30-day notice period,0.3,0.3,0.8,bge
+governing law clauses under the laws of the State of Delaware,1.0,1.0,0.8,bge
+governing law clauses under New York law,0.9,0.9,0.7,bge
+confidentiality obligations that survive for two years,0.1,0.1,0.6,bge
+disputes resolved by arbitration under American Arbitration Association rules,0.9,0.9,1.0,bge
+notices must be sent by certified mail,1.0,1.0,0.4,bge
+severability clause,1.0,1.0,,bge
+entire agreement clause superseding all prior agreements,0.9,1.0,,bge
+assignment requires the prior written consent of the other party,1.0,1.0,,bge
+counterparts may be delivered by facsimile or electronic signature,1.0,1.0,1.0,bge
+amendment only by written instrument signed by both parties,0.9,1.0,,bge
+waiver of the right to a jury trial,0.9,0.9,,bge
+indemnification of directors and officers,1.0,1.0,0.9,bge
+parties submit to the exclusive jurisdiction of the courts of New York,0.3,0.8,0.7,bge
+borrower pays all costs and expenses of the lender,0.7,0.9,1.0,bge
+payments free of withholding taxes with additional amounts paid,0.1,0.1,0.1,bge
+company shall maintain insurance coverage,1.0,1.0,,bge
+compliance with the Foreign Corrupt Practices Act,0.9,0.9,1.0,bge
+"further assurances, parties will execute additional documents",1.0,1.0,,bge
+section headings are for convenience only,1.0,1.0,,bge
+representations and warranties survive the closing,0.8,0.8,0.9,bge
+executive base salary of a fixed annual amount,1.0,1.0,1.0,bge
+paid vacation of four weeks per year,1.0,1.0,1.0,bge
+non-disparagement covenant by the employee,0.2,0.2,,bge
+acceleration of vesting upon a change in control,0.8,0.8,0.9,bge
+termination clauses with a 30-day notice period,1.0,1.0,1.0,hybrid
+governing law clauses under the laws of the State of Delaware,1.0,1.0,1.0,hybrid
+governing law clauses under New York law,0.9,1.0,1.0,hybrid
+confidentiality obligations that survive for two years,0.9,0.9,1.0,hybrid
+disputes resolved by arbitration under American Arbitration Association rules,1.0,1.0,1.0,hybrid
+notices must be sent by certified mail,1.0,1.0,0.4,hybrid
+severability clause,1.0,1.0,,hybrid
+entire agreement clause superseding all prior agreements,1.0,1.0,,hybrid
+assignment requires the prior written consent of the other party,1.0,1.0,,hybrid
+counterparts may be delivered by facsimile or electronic signature,1.0,1.0,1.0,hybrid
+amendment only by written instrument signed by both parties,1.0,1.0,,hybrid
+waiver of the right to a jury trial,0.9,0.9,,hybrid
+indemnification of directors and officers,1.0,1.0,0.9,hybrid
+parties submit to the exclusive jurisdiction of the courts of New York,0.5,1.0,1.0,hybrid
+borrower pays all costs and expenses of the lender,0.9,0.9,0.8,hybrid
+payments free of withholding taxes with additional amounts paid,0.2,1.0,0.0,hybrid
+company shall maintain insurance coverage,1.0,1.0,,hybrid
+compliance with the Foreign Corrupt Practices Act,1.0,1.0,1.0,hybrid
+"further assurances, parties will execute additional documents",1.0,1.0,,hybrid
+section headings are for convenience only,1.0,1.0,,hybrid
+representations and warranties survive the closing,0.0,0.0,0.9,hybrid
+executive base salary of a fixed annual amount,1.0,1.0,1.0,hybrid
+paid vacation of four weeks per year,1.0,1.0,1.0,hybrid
+non-disparagement covenant by the employee,1.0,1.0,,hybrid
+acceleration of vesting upon a change in control,0.8,0.8,0.9,hybrid
