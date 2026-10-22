@@ -1,0 +1,3 @@
+classification:
+  epochs: 1
+  model: tiny

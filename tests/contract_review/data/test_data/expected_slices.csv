@@ -1,0 +1,4 @@
+length,label_freq,jurisdiction,pronoun,party,family
+short,head,us_state,masculine,individual+entity,employment
+short,torso,none,feminine,none,lease
+short,tail,non_us,none,none,other

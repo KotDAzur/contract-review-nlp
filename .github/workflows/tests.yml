@@ -1,0 +1,37 @@
+name: tests
+
+# Sur chaque pull request et chaque push sur master : style, puis tests.
+# Les tests sont hermétiques (mini-modèles construits en local), donc sans réseau.
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_HUB_OFFLINE: "1"
+      HF_DATASETS_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Installer les dépendances (uv.lock doit être à jour)
+        run: uv sync --locked
+      - name: Style
+        run: |
+          uv run ruff check src main.py tests
+          uv run ruff format --check src main.py tests
+      - name: Tests
+        run: uv run pytest
