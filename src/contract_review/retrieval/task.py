@@ -9,7 +9,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 
 from contract_review.classification.task import predict_probs
-from contract_review.data.process import group_ids
+from contract_review.data.process import group_ids, normalize
 from contract_review.data.task import load_ledgar
 from contract_review.retrieval import process
 from contract_review.utils import ROOT, read_yaml
@@ -19,7 +19,7 @@ from contract_review.utils import ROOT, read_yaml
 class Bank:
     texts: list[str]
     labels: np.ndarray
-    copies_of: dict[str, list[int]]  # texte -> ids des clauses identiques dans la banque
+    copies_of: dict[str, list[int]]  # texte normalisé -> ids des clauses identiques dans la banque
 
 
 def build_dense(cfg: dict, bank: Bank, names: list[str], out_dir) -> dict[str, dict]:
@@ -81,7 +81,7 @@ def run(ctx) -> None:
     names = ledgar["train"].features["label"].names
     bank = Bank(list(ledgar["train"]["text"]), np.array(ledgar["train"]["label"]), {})
     for i, text in enumerate(bank.texts):
-        bank.copies_of.setdefault(text, []).append(i)
+        bank.copies_of.setdefault(normalize(text), []).append(i)
     strict, tolerant = np.arange(len(names)), group_ids(names, ctx.cfg["synonym_groups"])
 
     # Requêtes : clauses de test tirées au hasard, avec leurs tranches et leur type prédit

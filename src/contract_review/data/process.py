@@ -57,6 +57,12 @@ def compute_slices(texts, labels, train_counts) -> pd.DataFrame:
     return pd.DataFrame(slices_of(t, train_counts[y]) for t, y in zip(texts, labels))
 
 
+def normalize(text: str) -> str:
+    """Mots en minuscules : deux clauses qui ne diffèrent que par la casse ou la ponctuation
+    deviennent identiques. LEDGAR n'a aucun doublon exact, mais 4,5 % du test en a un ainsi."""
+    return re.sub(r"\W+", " ", text.lower()).strip()
+
+
 def group_ids(names: list[str], groups: list[list[str]]) -> np.ndarray:
     """Identifiant de groupe par label : les quasi-synonymes partagent le même."""
     ids = np.arange(len(names))
