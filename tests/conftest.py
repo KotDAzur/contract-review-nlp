@@ -55,7 +55,7 @@ WORDS = [
     "lease",
     "landlord",
 ]
-N_LABELS = 3
+LABELS = ["a", "b", "c"]
 HIDDEN = 16
 
 
@@ -70,8 +70,7 @@ def tiny_bert(tmp_path_factory):
         num_hidden_layers=1,
         num_attention_heads=2,
         intermediate_size=32,
-        num_labels=N_LABELS,
-        id2label={0: "a", 1: "b", 2: "c"},
+        id2label=dict(enumerate(LABELS)),  # fixe aussi le nombre de classes
     )
     BertForSequenceClassification(config).save_pretrained(path)
     BertTokenizer(vocab=vocab).save_pretrained(path)
