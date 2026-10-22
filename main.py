@@ -8,6 +8,11 @@ from contract_review.utils import make_context, write_run_info
 
 # Ordre du pipeline. Chaque étape est une fonction run(ctx).
 STEPS = {"data": data.run, "classification": classification.run, "retrieval": retrieval.run}
+from contract_review.evaluation import task as evaluation
+from contract_review.utils import make_context, write_run_info
+
+# Ordre du pipeline. Chaque étape est une fonction run(ctx).
+STEPS = {"data": data.run, "classification": classification.run, "evaluation": evaluation.run}
 
 
 def run(args: argparse.Namespace) -> None:
