@@ -4,8 +4,8 @@ Ce document décrit ce que fait le modèle, comment il a été entraîné et év
 **ce pour quoi il ne doit pas servir**. Les données sont décrites dans `DATA_CARD.md`, les
 résultats détaillés et l'audit de biais dans `AUDIT.md` (généré dans le dossier de chaque run).
 
-Les cases marquées *à compléter* se remplissent avec les chiffres du run final : chaque ligne
-indique le fichier où les lire.
+Les chiffres viennent du run final, versionné dans `results/` ; chaque tableau indique le
+fichier où les lire.
 
 ## Résumé
 
@@ -114,7 +114,12 @@ coût ? ».
 et 83 de macro-F1**. Les protocoles d'entraînement peuvent différer (nombre d'époques,
 longueur maximale des séquences, seeds) : la comparaison est indicative.
 
-**Lecture du run final.** Le baseline TF-IDF atteint la référence publiée (88,1 et 82,8).
+LexGLUE publie aussi un SVM TF-IDF à **87,0 et 81,4** : notre baseline (88,1 et 82,8) le
+dépasse, et l'écart publié entre ce SVM et Legal-BERT n'est que de 1,2 et 1,6 point. Le
+protocole de LexGLUE est plus long que le nôtre (jusqu'à 20 époques, séquences de 512 tokens,
+meilleur de 5 seeds).
+
+**Lecture du run final.** Le baseline TF-IDF atteint la référence publiée de Legal-BERT.
 Legal-BERT affiné pendant 5 époques ne la dépasse pas : accuracy équivalente, et un macro-F1
 **plus faible de 2,6 points**, dont l'intervalle de confiance exclut zéro. Sur ce run, le
 transformer ne justifie donc pas son coût en qualité de classification. Deux indices
@@ -124,6 +129,16 @@ anticipé se déclenche, et l'écart entre l'accuracy (0,878) et le macro-F1 (0,
 les types rares sont sous-appris. Ce qui reste en faveur du transformer est sa probabilité
 calibrée (ECE de 0,047), qui permet le seuil de revue humaine ci-dessous ; l'équivalent n'a
 pas été testé pour le baseline, dont les scores SVM ne sont pas des probabilités.
+
+**Où se perd l'écart.** Il se concentre sur les types rares. En moyenne par type, le F1 du
+transformer est égal à celui du baseline pour les 16 types de tête (0,923 contre 0,921) et
+les 62 types intermédiaires (0,847 contre 0,850), mais inférieur de 11,2 points pour les 22
+types de moins de 300 exemples (0,587 contre 0,699), ce qui explique à peu près les 2,6
+points de macro-F1. Les types les plus faibles sont Applicable Laws (F1 0,105), Assigns et
+Books (0, avec 4 et 2 exemples de test seulement). La plupart des erreurs sont des
+confusions entre types quasi synonymes : Tax Withholdings et Withholdings (38 et 13 clauses),
+Definitions et Defined Terms (25 et 18), Integration vers Entire Agreements (21),
+Applicable Laws vers Governing Laws (39).
 
 Les résultats par type (`metrics/per_class.csv`), les 20 confusions les plus fréquentes
 (`metrics/confusions.csv`) et les 15 types les plus faibles (`figures/weakest_classes.png`) se
@@ -186,10 +201,10 @@ exclues des résultats.
 
 | Constat de l'audit | Résultat |
 |---|---|
-| Écarts de tranche significatifs | *à compléter* |
-| Sensibilité au genre, à la juridiction, à la forme sociale | *à compléter* |
-| Anglais contre français : accuracy et part étiquetée automatiquement | *à compléter* |
-| Accuracy avec et sans les clauses du test déjà vues | *à compléter* |
+| Écarts de tranche significatifs | 5 sur 23 tranches testables : clauses courtes -2,1 points, parties de type société +2,4, famille crédit +3,3, fusions-acquisitions +4,0, clauses déjà vues dans le train +8,0 (le baseline en montre aussi) |
+| Sensibilité au genre, à la juridiction, à la forme sociale | Faible. Genre : 1,0 % de prédictions changées (n = 299), 0,0 % dans l'autre sens (n = 37 et 8, petits). Juridiction : 0,9 % pour le témoin Texas, 1,3 à 1,6 % pour France, Angleterre et Allemagne, seule l'Allemagne est significative (+0,7 point). Forme sociale : 2,7 % pour le témoin Ltd. et GmbH, 5,0 % pour S.A.S. (+2,3 points, significatif) |
+| Anglais contre français : accuracy et part étiquetée automatiquement | 0,883 en anglais contre 0,240 en français (300 clauses traduites automatiquement) ; 3,3 % des clauses françaises seraient étiquetées automatiquement, avec une précision de 0,800 : le modèle n'est pas utilisable en français |
+| Accuracy avec et sans les clauses du test déjà vues | 0,878 avec, 0,873 sans (4,5 % de doublons) : la fuite change peu le résultat global, mais ces clauses sont presque toutes bien classées (0,973) |
 
 ## Limites connues
 
